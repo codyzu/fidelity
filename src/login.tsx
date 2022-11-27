@@ -15,28 +15,11 @@ import i18n from './i18n';
 const PhoneInput = PI.default ?? PI; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
 // Const PhoneInput = import.meta.env.PROD ? (PI as any).default : PI;
 
-const actionCodeSettings = {
-  // URL you want to redirect back to. The domain (www.example.com) for this
-  // URL must be in the authorized domains list in the Firebase Console.
-  url: `${import.meta.env.BASE_URL}finishLogin`,
-  // This must be true.
-  handleCodeInApp: true,
-  // IOS: {
-  //   bundleId: 'com.example.ios'
-  // },
-  // android: {
-  //   packageName: 'com.example.android',
-  //   installApp: true,
-  //   minimumVersion: '12'
-  // },
-  // dynamicLinkDomain: 'example.page.link'
-};
-
 export default function Login() {
   useEffect(() => {
     console.log('Setting language', i18n.language);
     auth.languageCode = i18n.language;
-    console.log('code', actionCodeSettings);
+    // Console.log('code', actionCodeSettings);
   }, [i18n.language]);
 
   // Stateful form controls
@@ -76,6 +59,24 @@ export default function Login() {
   }
 
   async function loginEmail() {
+    const actionCodeSettings = {
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be in the authorized domains list in the Firebase Console.
+      url: `${window.location.origin}${import.meta.env.BASE_URL}finishLogin`,
+      // This must be true.
+      handleCodeInApp: true,
+      // IOS: {
+      //   bundleId: 'com.example.ios'
+      // },
+      // android: {
+      //   packageName: 'com.example.android',
+      //   installApp: true,
+      //   minimumVersion: '12'
+      // },
+      // dynamicLinkDomain: 'example.page.link'
+    };
+
+    console.log('AC', actionCodeSettings);
     await sendSignInLinkToEmail(auth, email, actionCodeSettings);
     window.localStorage.setItem('emailForSignIn', email);
   }

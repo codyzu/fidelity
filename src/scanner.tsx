@@ -38,12 +38,6 @@ export default function Scanner() {
     };
   }, []);
 
-  function updateUser(uid: string) {
-    void updateDoc(doc(db, 'users', uid), {
-      points: increment(1),
-    });
-  }
-
   const onScan: OnResultFunction = (result, error) => {
     if (error) {
       // Console.log('QR Error', error);
