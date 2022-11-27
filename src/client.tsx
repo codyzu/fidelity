@@ -50,7 +50,7 @@ export default function Client() {
           Sign Out
         </button>
       </div>
-      <div>Points: {0}</div>
+      <div>Points: {user?.points ?? 0}</div>
     </div>
   );
 }
