@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import QRCode from 'react-qr-code';
 import {signOut} from 'firebase/auth';
 import {useTranslation} from 'react-i18next';
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc, onSnapshot} from 'firebase/firestore';
 import {auth} from './firebase';
 import db from './db';
 import type User from './user';
@@ -19,18 +19,28 @@ export default function Client() {
       return;
     }
 
-    async function getUserData() {
-      const ref = await getDoc(doc(db, 'users', auth.currentUser!.uid));
-      if (!ref.exists()) {
+    return onSnapshot(doc(db, 'users', auth.currentUser.uid), (snapshot) => {
+      if (!snapshot.exists()) {
         console.log('no user data');
         return;
       }
 
-      console.log('exists', ref.exists(), 'data', ref.data());
-      setUser(ref.data());
-    }
+      console.log('exists', 'data', snapshot.data());
+      setUser(snapshot.data());
+    });
 
-    void getUserData();
+    // Async function getUserData() {
+    //   const ref = await getDoc(doc(db, 'users', auth.currentUser!.uid));
+    //   if (!ref.exists()) {
+    //     console.log('no user data');
+    //     return;
+    //   }
+
+    //   console.log('exists', ref.exists(), 'data', ref.data());
+    //   setUser(ref.data());
+    // }
+
+    // void getUserData();
   }, [auth.currentUser]);
 
   return (
