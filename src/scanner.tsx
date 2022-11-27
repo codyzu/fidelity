@@ -3,6 +3,7 @@ import {type OnResultFunction, QrReader} from 'react-qr-reader';
 import {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import clsx from 'clsx';
+import {Link} from 'react-router-dom';
 import db from './db';
 import type User from './user';
 
@@ -99,6 +100,38 @@ export default function Scanner() {
       {user?.phoneNumber ?? null}
       {user?.email ?? null}
       {user && <div>{user.points}</div>}
+      {!code && (
+        <div className="mt-8 grid grid-cols-4 gap-2">
+          <button type="button" className="btn py-4">
+            +1
+          </button>
+          <button type="button" className="btn py-4">
+            +5
+          </button>
+          <button type="button" className="btn py-4">
+            +10
+          </button>
+          <button type="button" className="btn py-4 bg-red-800">
+            Clear
+          </button>
+        </div>
+      )}
+      <div className="mt-8 grid grid-cols-4 gap-2">
+        <Link
+          className="btn col-start-2 decoration-none flex items-center justify-centere"
+          role="button"
+          to="/"
+        >
+          <div>My Profile</div>
+        </Link>
+        <Link
+          className="btn col-start-3 decoration-none flex items-center justify-center"
+          role="button"
+          to="/admin"
+        >
+          <div>Admin</div>
+        </Link>
+      </div>
     </div>
   );
 }
