@@ -6,14 +6,14 @@ import {
 } from 'firebase/auth';
 import {useEffect, useRef, useState} from 'react';
 import PI from 'react-phone-input-2';
-// Import PhoneInput from 'react-phone-input-2';
 import {auth} from './firebase';
 import i18n from './i18n';
 
+// Hack so that react-phone-input-2 works in dev and prod
+// https://github.com/bl00mber/react-phone-input-2/issues/533#issuecomment-1125220454
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 const PhoneInput = PI.default ?? PI; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
-// Const PhoneInput = import.meta.env.PROD ? (PI as any).default : PI;
 
 export default function Login() {
   useEffect(() => {

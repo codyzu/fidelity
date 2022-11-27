@@ -28,19 +28,6 @@ export default function Client() {
       console.log('exists', 'data', snapshot.data());
       setUser(snapshot.data());
     });
-
-    // Async function getUserData() {
-    //   const ref = await getDoc(doc(db, 'users', auth.currentUser!.uid));
-    //   if (!ref.exists()) {
-    //     console.log('no user data');
-    //     return;
-    //   }
-
-    //   console.log('exists', ref.exists(), 'data', ref.data());
-    //   setUser(ref.data());
-    // }
-
-    // void getUserData();
   }, [auth.currentUser]);
 
   return (
