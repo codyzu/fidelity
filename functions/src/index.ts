@@ -18,7 +18,7 @@ export const addUser = functions
     }
 
     console.log('USER', userDoc);
-    await admin.firestore().collection('users').add(userDoc);
+    await admin.firestore().collection('users').doc(user.uid).create(userDoc);
   });
 // // Start writing functions
 // // https://firebase.google.com/docs/functions/typescript
