@@ -4,11 +4,12 @@ import {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import clsx from 'clsx';
 import db from './db';
+import type User from './user';
 
 export default function Scanner() {
   const [code, setCode] = useState();
   const [handle, setHandle] = useState<number>();
-  const [user, setUser] = useState<unknown>();
+  const [user, setUser] = useState<User>();
   const [pending, setPending] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 

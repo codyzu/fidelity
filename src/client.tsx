@@ -5,11 +5,12 @@ import {useTranslation} from 'react-i18next';
 import {doc, getDoc} from 'firebase/firestore';
 import {auth} from './firebase';
 import db from './db';
+import type User from './user';
 
 export default function Client() {
   const {t, i18n} = useTranslation();
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     console.log('client', auth.currentUser);
