@@ -49,8 +49,8 @@ export default function Scanner() {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="bg-white w-auto aspect-square border-yellow-500 border-20">
+    <div className="flex flex-col items-center">
+      <div className="bg-white w-[80vw] h-[80vw] aspect-square border-yellow-500 border-20 box-border">
         {code ? (
           <div className="w-full h-full flex items-center justify-center">
             <div className="rounded-1\/2 w-[90%] h-[90%] bg-green-6 flex items-center justify-center">
@@ -61,7 +61,7 @@ export default function Scanner() {
           <QrReader
             videoContainerStyle={{width: '100%', height: '100%', padding: 0}}
             className="w-full h-full"
-            videoStyle={{zIndex: '1'}}
+            videoStyle={{/*zIndex: '1' */ objectFit: 'cover'}}
             constraints={{facingMode: 'environment', aspectRatio: 1}}
             scanDelay={500}
             onResult={onScan}
