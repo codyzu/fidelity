@@ -1,0 +1,44 @@
+{
+  "name": "fidelity",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "pnpm run build && firebase deploy"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.1.55",
+    "firebase": "^9.14.0",
+    "i18next": "^22.0.6",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^12.0.0",
+    "react-phone-input-2": "^2.15.1",
+    "react-qr-code": "^2.0.8",
+    "react-qr-reader": "3.0.0-beta-1",
+    "react-router-dom": "^6.4.3",
+    "use-debounce": "^8.0.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@unocss/preset-attributify": "^0.46.5",
+    "@unocss/preset-icons": "^0.46.5",
+    "@unocss/preset-uno": "^0.46.5",
+    "@unocss/reset": "^0.46.5",
+    "@unocss/transformer-attributify-jsx": "^0.46.5",
+    "@vitejs/plugin-react": "^2.2.0",
+    "eslint-config-xo-react": "^0.27.0",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "firebase-tools": "^11.16.1",
+    "typescript": "^4.6.4",
+    "unocss": "^0.46.5",
+    "vite": "^3.2.3",
+    "xo": "^0.53.1"
+  }
+}
