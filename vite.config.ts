@@ -38,7 +38,7 @@ export default defineConfig({
     }),
     react(),
   ],
-  base: 'http://localhost:5173/',
+  // Base: 'http://localhost:5173/',
   server: {
     strictPort: true, // Otherwise the email login link will be broken
   },
