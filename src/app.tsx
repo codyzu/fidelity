@@ -12,7 +12,6 @@ function App() {
   useEffect(
     () =>
       auth.onAuthStateChanged((nextUser) => {
-        // Use undefined instead of null
         setLoggedIn(Boolean(nextUser));
       }),
     [],
