@@ -1,6 +1,8 @@
 import {lazy, useEffect, useState} from 'react';
 import {Outlet} from 'react-router-dom';
 import {auth} from './firebase';
+import LanguageSwitcher from './language-swicther';
+import Page from './page';
 
 const Login = lazy(async () => import('./login'));
 
@@ -16,14 +18,7 @@ function App() {
     [],
   );
 
-  return (
-    <div
-      className="font-sans text-black px-5 py-8"
-      md="mx-auto max-w-screen-md"
-    >
-      {loggedIn ? <Outlet /> : <Login />}
-    </div>
-  );
+  return <Page>{loggedIn ? <Outlet /> : <Login />}</Page>;
 }
 
 export default App;

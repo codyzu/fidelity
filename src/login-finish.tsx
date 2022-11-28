@@ -4,6 +4,7 @@ import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
+import Page from './page';
 
 export default function LoginFinish() {
   const {t} = useTranslation();
@@ -36,19 +37,23 @@ export default function LoginFinish() {
 
   if (!linkValid) {
     return (
-      <div>
+      <Page>
         <div className="i-lucide-frown h-4rem w-4rem" />
         {t('loginLinkError')} <Link to="/">{t('homepage')}</Link>
-      </div>
+      </Page>
     );
   }
 
   if (!email) {
-    <div>
+    <Page>
       <div className="i-lucide-frown h-4rem w-4rem" />
       {t('emailNotFound')}
-    </div>;
+    </Page>;
   }
 
-  return <div className="i-lucide-loader animate-spin h-4rem w-4rem" />;
+  return (
+    <Page>
+      <div className="i-lucide-loader animate-spin h-4rem w-4rem" />;
+    </Page>
+  );
 }
