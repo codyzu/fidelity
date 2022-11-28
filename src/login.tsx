@@ -18,9 +18,8 @@ const PhoneInput = PI.default ?? PI; // eslint-disable-line @typescript-eslint/n
 export default function Login() {
   const {t, i18n} = useTranslation();
   useEffect(() => {
-    console.log('Setting Firebase auth language', i18n.language);
-    auth.languageCode = i18n.language;
-  }, [i18n.language]);
+    auth.languageCode = i18n.resolvedLanguage;
+  }, [i18n.resolvedLanguage]);
 
   // Stateful form controls
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -34,6 +33,7 @@ export default function Login() {
   const [sendResult, setSendResult] = useState<ConfirmationResult>();
 
   async function loginSms() {
+    // Ideas to improve this: https://stackoverflow.com/questions/62619916/firebase-invisible-recaptcha-does-not-work-in-react-js
     const recapthaVerifier = new RecaptchaVerifier(
       smsLoginRef.current!,
       {

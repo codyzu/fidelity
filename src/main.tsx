@@ -5,12 +5,12 @@ import '@unocss/reset/normalize.css';
 import 'uno.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import './i18n'; // eslint-disable-line import/no-unassigned-import
-import App from './app';
+import LoadingSpinner from './loading-spinner';
 
 const Client = lazy(async () => import('./client'));
 const Scanner = lazy(async () => import('./scanner'));
 const LoginFinish = lazy(async () => import('./login-finish'));
-// Const App = lazy(async () => import('./app'));
+const App = lazy(async () => import('./app'));
 
 const router = createBrowserRouter([
   {
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.querySelector('#root')!).render(
   <React.StrictMode>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <RouterProvider router={router} />
     </Suspense>
   </React.StrictMode>,

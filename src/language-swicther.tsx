@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
         <button
           className={clsx(
             'btn-sm rounded-r-none py-1',
-            i18n.language === 'fr' && 'bg-gray-6',
+            i18n.resolvedLanguage === 'fr' && 'bg-gray-6',
           )}
           type="button"
           onClick={async () => i18n.changeLanguage('fr')}
@@ -20,7 +20,7 @@ export default function LanguageSwitcher() {
         <button
           className={clsx(
             'btn-sm rounded-l-none py-1',
-            i18n.language === 'en' && 'bg-gray-6',
+            i18n.resolvedLanguage === 'en' && 'bg-gray-6',
           )}
           type="button"
           onClick={async () => i18n.changeLanguage('en')}

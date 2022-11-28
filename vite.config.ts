@@ -25,7 +25,7 @@ export default defineConfig({
         // You could still have object style
         {
           btn: 'p-4 font-semibold rounded-lg shadow-md bg-sky-700 text-white border-0 text-center text-lg',
-          'btn-sm': 'btn py-2 text-md',
+          'btn-sm': 'btn py-2 text-base',
           'input-base':
             'rounded-lg shadow-md border-2 border-sky-700 invalid:text-red-600 invalid:border-red-600',
           input: 'py-2 px-4 input-base',
@@ -42,5 +42,12 @@ export default defineConfig({
   // Base: 'http://localhost:5173/',
   server: {
     strictPort: true, // Otherwise the email login link will be broken
+  },
+  build: {
+    rollupOptions: {
+      manualChunks: {
+        firebase: ['firebase/auth', 'firebase/app', 'firebase/firestore'],
+      },
+    },
   },
 });
