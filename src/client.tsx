@@ -27,7 +27,7 @@ export default function Client() {
       }
 
       console.log('exists', 'data', snapshot.data());
-      setUser(snapshot.data());
+      setUser(snapshot.data() as User);
     });
   }, [auth.currentUser]);
 
