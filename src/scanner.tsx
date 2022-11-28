@@ -1,4 +1,11 @@
-import {doc, getDoc, increment, setDoc, updateDoc} from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  increment,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import {type OnResultFunction, QrReader} from 'react-qr-reader';
 import {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
@@ -6,6 +13,7 @@ import clsx from 'clsx';
 import {Link} from 'react-router-dom';
 import db from './db';
 import type User from './user';
+import UserDisplay from './user-display';
 
 export default function Scanner() {
   const [code, setCode] = useState();
@@ -13,26 +21,58 @@ export default function Scanner() {
   const [user, setUser] = useState<User>();
   const [pending, setPending] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [pointsToAdd, setPointsToAdd] = useState<number>(1);
+  const [isAdminAction, setIsAdminAction] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  const incrementPointsAction = async (scannedUid: string) =>
+    setDoc(
+      doc(db, 'users', scannedUid),
+      {points: increment(pointsToAdd)},
+      {merge: true},
+    );
+
+  const [action, setAction] = useState(() => incrementPointsAction);
+
+  function setIncrementPointsAction(
+    pointsIncrement: (previous: number) => number,
+  ) {
+    setIsAdminAction(false);
+    setPointsToAdd(pointsIncrement);
+    setAction(() => incrementPointsAction);
+  }
+
+  function setAdminAction(willBeAdmin: boolean) {
+    setIsAdminAction(true);
+    setIsAdmin(willBeAdmin);
+    setPointsToAdd(1);
+    setAction(
+      () => async (scannedUid: string) =>
+        setDoc(doc(db, 'users', scannedUid), {admin: isAdmin}, {merge: true}),
+    );
+  }
 
   const debouncedScan = useDebouncedCallback(
-    async (nextCode) => {
-      console.log('code', nextCode);
+    async (scannedUid) => {
+      console.log('code', scannedUid);
       setPending(true);
-      setCode(nextCode);
+      setCode(scannedUid);
       const nextHandle = setTimeout(() => {
         console.log('clear');
         setCode(undefined);
         setHandle(undefined);
         setUser(undefined);
         setError(false);
+        setIncrementPointsAction(() => 1);
       }, 5000);
       setHandle(nextHandle);
-      const ref = doc(db, 'users', nextCode);
+      const ref = doc(db, 'users', scannedUid);
       try {
-        await setDoc(ref, {points: increment(1)}, {merge: true});
+        await action(scannedUid);
+        // Await setDoc(ref, {points: increment(1)}, {merge: true});
         const snapshot = await getDoc(ref);
         console.log('SNAP', snapshot.data());
-        setUser(snapshot.data());
+        setUser(snapshot.data() as User);
       } catch (userError: unknown) {
         setError(true);
         throw userError;
@@ -97,41 +137,87 @@ export default function Scanner() {
       </div>
 
       {code && <div>{code}</div>}
-      {user?.phoneNumber ?? null}
-      {user?.email ?? null}
-      {user && <div>{user.points}</div>}
+      <UserDisplay user={user} />
       {!code && (
-        <div className="mt-8 grid grid-cols-4 gap-2">
-          <button type="button" className="btn py-4">
+        <div className="m-8 grid grid-cols-4 gap-4 w-full">
+          <div className="flex items-center justify-center">
+            {isAdminAction ? (
+              <div className="text-base bg-red-6 text-white font-semibold rounded-full p-2">{`${
+                isAdmin ? '+' : '-'
+              }admin`}</div>
+            ) : (
+              <div className="text-3xl">{`+${pointsToAdd}`}</div>
+            )}
+          </div>
+          <button
+            type="button"
+            className="btn py-4"
+            onClick={() => {
+              setIncrementPointsAction((p) => (isAdminAction ? 1 : p + 1));
+            }}
+          >
             +1
           </button>
-          <button type="button" className="btn py-4">
+          <button
+            type="button"
+            className="btn py-4"
+            onClick={() => {
+              setIncrementPointsAction((p) => (isAdminAction ? 5 : p + 5));
+            }}
+          >
             +5
           </button>
-          <button type="button" className="btn py-4">
+          <button
+            type="button"
+            className="btn py-4"
+            onClick={() => {
+              setIncrementPointsAction((p) => (isAdminAction ? 10 : p + 10));
+            }}
+          >
             +10
           </button>
-          <button type="button" className="btn py-4 bg-red-800">
+          <button
+            type="button"
+            className="btn py-4 bg-red-800 col-span-4"
+            onClick={() => {
+              setIncrementPointsAction(() => 1);
+            }}
+          >
             Clear
           </button>
         </div>
       )}
-      <div className="mt-8 grid grid-cols-4 gap-2">
-        <Link
-          className="btn col-start-2 decoration-none flex items-center justify-centere"
-          role="button"
-          to="/"
-        >
-          <div>My Profile</div>
-        </Link>
-        <Link
-          className="btn col-start-3 decoration-none flex items-center justify-center"
-          role="button"
-          to="/admin"
-        >
-          <div>Admin</div>
-        </Link>
+      <div className="mt-8 grid grid-cols-2 gap-6">
+        {!code && (
+          <>
+            <button
+              className="btn-sm"
+              type="button"
+              onClick={() => {
+                setAdminAction(true);
+              }}
+            >
+              +Admin
+            </button>
+            <button
+              className="btn-sm"
+              type="button"
+              onClick={() => {
+                setAdminAction(false);
+              }}
+            >
+              -Admin
+            </button>
+          </>
+        )}
       </div>
+      <Link
+        className="btn-sm decoration-none flex items-center justify-center mt-6"
+        role="button"
+        to="/"
+      >
+        <div>My Profile</div>
+      </Link>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {doc, getDoc, onSnapshot} from 'firebase/firestore';
 import {auth} from './firebase';
 import db from './db';
 import type User from './user';
+import UserDisplay from './user-display';
 
 export default function Client() {
   const {t, i18n} = useTranslation();
@@ -34,21 +35,16 @@ export default function Client() {
     <div className="flex flex-col items-center gap-y-3">
       <div className="text-3xl">{t('welcome')}</div>
       <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
-      <div className="text-2xl">
-        {auth.currentUser?.email ??
-          auth.currentUser?.phoneNumber ??
-          'not logged in'}
-      </div>
+      <UserDisplay user={user} />
       <div>
         <button
-          className="btn"
+          className="btn-sm"
           type="button"
           onClick={async () => signOut(auth)}
         >
           Sign Out
         </button>
       </div>
-      <div>Points: {user?.points ?? 0}</div>
     </div>
   );
 }

@@ -7,7 +7,9 @@ export const addUser = functions
   .region('europe-west1')
   .auth.user()
   .onCreate(async (user, context) => {
-    const userDoc: {phoneNumber?: string; email?: string} = {};
+    const userDoc: {phoneNumber?: string; email?: string; admin: boolean} = {
+      admin: false,
+    };
 
     if (user.phoneNumber) {
       userDoc.phoneNumber = user.phoneNumber;

@@ -24,7 +24,8 @@ export default defineConfig({
       shortcuts: [
         // You could still have object style
         {
-          btn: 'py-2 px-4 font-semibold rounded-lg shadow-md bg-sky-700 text-white border-0 text-center',
+          btn: 'p-4 font-semibold rounded-lg shadow-md bg-sky-700 text-white border-0 text-center text-lg',
+          'btn-sm': 'btn py-2 text-md',
           'input-base':
             'rounded-lg shadow-md border-2 border-sky-700 invalid:text-red-600 invalid:border-red-600',
           input: 'py-2 px-4 input-base',
