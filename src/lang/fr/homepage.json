@@ -1,3 +1,13 @@
 {
-  "welcome": "bienvenue à fidelity"
+  "Welcome to fidelity": "Bienvenue à fidelity",
+  "Login by email": "Connection par Mail",
+  "Login by SMS": "Connection par SMS",
+  "Login": "Se connecter",
+  "Sign in to get started": "Connectez vous pour commencer",
+  "Sign out": "Déconnection",
+  "Clear": "Reinitializez",
+  "My profile": "Mon profil",
+  "loginLinkError": "Quelque chose n&apos;est pas bien. Navigez à la",
+  "emailNotFound": "Nous avons detecté que vous avez changé votre browser web ou device",
+  "homepage": "page d&apos;accuiel"
 }

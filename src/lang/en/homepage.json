@@ -1,3 +1,4 @@
 {
-  "welcome": "welcome to fidelity"
+  "loginLinkError": "Something is not right, you shouldn&apos;t be here. Go to the",
+  "emailNotFound": "Looks like you changed browsers or devices. Please enter your email address again to complete the login."
 }

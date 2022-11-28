@@ -11,11 +11,14 @@ import {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import db from './db';
 import type User from './user';
 import UserDisplay from './user-display';
 
 export default function Scanner() {
+  const {t} = useTranslation();
+
   const [code, setCode] = useState();
   const [handle, setHandle] = useState<number>();
   const [user, setUser] = useState<User>();
@@ -66,12 +69,9 @@ export default function Scanner() {
         setIncrementPointsAction(() => 1);
       }, 5000);
       setHandle(nextHandle);
-      const ref = doc(db, 'users', scannedUid);
       try {
         await action(scannedUid);
-        // Await setDoc(ref, {points: increment(1)}, {merge: true});
-        const snapshot = await getDoc(ref);
-        console.log('SNAP', snapshot.data());
+        const snapshot = await getDoc(doc(db, 'users', scannedUid));
         setUser(snapshot.data() as User);
       } catch (userError: unknown) {
         setError(true);
@@ -90,7 +90,7 @@ export default function Scanner() {
         clearTimeout(handle);
       }
     };
-  }, []);
+  }, [handle]);
 
   const onScan: OnResultFunction = (result, error) => {
     if (error) {
@@ -144,7 +144,7 @@ export default function Scanner() {
             {isAdminAction ? (
               <div className="text-base bg-red-6 text-white font-semibold rounded-full p-2">{`${
                 isAdmin ? '+' : '-'
-              }admin`}</div>
+              }${t('admin')}`}</div>
             ) : (
               <div className="text-3xl">{`+${pointsToAdd}`}</div>
             )}
@@ -183,7 +183,7 @@ export default function Scanner() {
               setIncrementPointsAction(() => 1);
             }}
           >
-            Clear
+            {t('Clear')}
           </button>
         </div>
       )}
@@ -197,7 +197,7 @@ export default function Scanner() {
                 setAdminAction(true);
               }}
             >
-              +Admin
+              +{t('admin')}
             </button>
             <button
               className="btn-sm"
@@ -206,7 +206,7 @@ export default function Scanner() {
                 setAdminAction(false);
               }}
             >
-              -Admin
+              -{t('admin')}
             </button>
           </>
         )}
@@ -216,7 +216,7 @@ export default function Scanner() {
         role="button"
         to="/"
       >
-        <div>My Profile</div>
+        <div>{t('My profile')}</div>
       </Link>
     </div>
   );

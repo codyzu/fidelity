@@ -33,7 +33,7 @@ export default function Client() {
 
   return (
     <div className="flex flex-col items-center gap-y-3">
-      <div className="text-3xl">{t('welcome')}</div>
+      <div className="text-3xl">{t('Welcome to fidelity')}</div>
       <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
       <UserDisplay user={user} />
       <div>
@@ -42,7 +42,7 @@ export default function Client() {
           type="button"
           onClick={async () => signOut(auth)}
         >
-          Sign Out
+          {t('Sign out')}
         </button>
       </div>
     </div>

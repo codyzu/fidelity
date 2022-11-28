@@ -1,9 +1,12 @@
 import {isSignInWithEmailLink, signInWithEmailLink} from 'firebase/auth';
+import {t} from 'i18next';
 import {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
 
 export default function LoginFinish() {
+  const {t} = useTranslation();
   const linkValid = isSignInWithEmailLink(auth, window.location.href);
   const email = window.localStorage.getItem('emailForSignIn');
   const navigate = useNavigate();
@@ -34,18 +37,16 @@ export default function LoginFinish() {
   if (!linkValid) {
     return (
       <div>
-        <div className="i-lucide-server-crash h-4rem w-4rem" />
-        Something is not right, you shouldn&apos;t be here. Go to the{' '}
-        <Link to="/">homepage</Link>
+        <div className="i-lucide-frown h-4rem w-4rem" />
+        {t('loginLinkError')} <Link to="/">{t('homepage')}</Link>
       </div>
     );
   }
 
   if (!email) {
     <div>
-      <div className="i-lucide-server-crash h-4rem w-4rem" />
-      Looks like you changed browsers or devices. Please enter your email
-      address again to complete the login.
+      <div className="i-lucide-frown h-4rem w-4rem" />
+      {t('emailNotFound')}
     </div>;
   }
 

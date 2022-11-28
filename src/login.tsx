@@ -5,9 +5,9 @@ import {
   signInWithPhoneNumber,
 } from 'firebase/auth';
 import {useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import PI from 'react-phone-input-2';
 import {auth} from './firebase';
-import i18n from './i18n';
 
 // Hack so that react-phone-input-2 works in dev and prod
 // https://github.com/bl00mber/react-phone-input-2/issues/533#issuecomment-1125220454
@@ -16,10 +16,10 @@ import i18n from './i18n';
 const PhoneInput = PI.default ?? PI; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
 
 export default function Login() {
+  const {t, i18n} = useTranslation();
   useEffect(() => {
-    console.log('Setting language', i18n.language);
+    console.log('Setting Firebase auth language', i18n.language);
     auth.languageCode = i18n.language;
-    // Console.log('code', actionCodeSettings);
   }, [i18n.language]);
 
   // Stateful form controls
@@ -54,7 +54,6 @@ export default function Login() {
 
     // Reset the code input box after sending the SMS
     setSmsCode('');
-    console.log('SIGN IN result', result);
     setSendResult(result);
   }
 
@@ -85,9 +84,9 @@ export default function Login() {
     <div className="flex justify-center">
       <div className="shadow-lg rounded-lg p-2 flex flex-col w-full">
         <div className="text-xl text-center m-2 mb-6">
-          Sign in to get started
+          {t('Sign in to get started')}
         </div>
-        <label className="m-2">Email: </label>
+        <label className="m-2">{t('Login by email')}:</label>
         <input
           className="input m-2"
           type="email"
@@ -97,9 +96,9 @@ export default function Login() {
           }}
         />
         <button className="btn m-2 mb-6" type="button" onClick={loginEmail}>
-          Login
+          {t('Login')}
         </button>
-        <label className="m-2">SMS:</label>
+        <label className="m-2">{t('Login by SMS')}:</label>
         <div className="m-2">
           <PhoneInput
             // InputClass="input-base! py-2! relative! w-full!"
@@ -125,11 +124,11 @@ export default function Login() {
             void loginSms();
           }}
         >
-          Send SMS
+          {t('Login')}
         </button>
         {sendResult && (
           <>
-            <label className="m-2">Code:</label>
+            <label className="m-2">{t('Code')}:</label>
             <input
               className="input m-2"
               type="text"
