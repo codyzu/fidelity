@@ -51,7 +51,11 @@ export default function Scanner() {
     setPointsToAdd(1);
     setAction(
       () => async (scannedUid: string) =>
-        setDoc(doc(db, 'users', scannedUid), {admin: isAdmin}, {merge: true}),
+        setDoc(
+          doc(db, 'users', scannedUid),
+          {admin: willBeAdmin},
+          {merge: true},
+        ),
     );
   }
 
@@ -60,15 +64,6 @@ export default function Scanner() {
       console.log('code', scannedUid);
       setPending(true);
       setCode(scannedUid);
-      const nextHandle = setTimeout(() => {
-        console.log('clear');
-        setCode(undefined);
-        setHandle(undefined);
-        setUser(undefined);
-        setError(false);
-        setIncrementPointsAction(() => 1);
-      }, 5000);
-      setHandle(nextHandle);
       try {
         await action(scannedUid);
         const snapshot = await getDoc(doc(db, 'users', scannedUid));
@@ -78,6 +73,15 @@ export default function Scanner() {
         throw userError;
       } finally {
         setPending(false);
+        const nextHandle = setTimeout(() => {
+          console.log('clear');
+          setCode(undefined);
+          setHandle(undefined);
+          setUser(undefined);
+          setError(false);
+          setIncrementPointsAction(() => 1);
+        }, 5000);
+        setHandle(nextHandle);
       }
     },
     5000,
