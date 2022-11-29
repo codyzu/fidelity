@@ -9,17 +9,17 @@ export default function UserDisplay({user}: {user?: User}) {
 
   return (
     <>
-      <div className="flex mb-4">
-        <div className="mr-2 text-2xl">{user.phoneNumber ?? user.email}</div>
+      <div className="flex justify-center w-ful items-baseline">
+        <div className="mr-1 text-2xl break-all flex-shrink-1">{user.phoneNumber ?? user.email}</div>
         {user.admin && (
-          <div className="bg-red-6 text-white rounded-full px-4 flex items-center justify-center text-sm font-semibold">
+          <div className="bg-red-6 text-white rounded-full px-3 h-6 flex items-center justify-center text-sm font-semibold">
             <div>{t('admin')}</div>
           </div>
         )}
       </div>
       <div className="text-2xl">
         {t('Points')}:{' '}
-        <div className="inline font-mono font-semibold">{user.points}</div>
+        <div className="inline font-mono font-semibold">{user.points ?? 0}</div>
       </div>
     </>
   );

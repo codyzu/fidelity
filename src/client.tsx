@@ -13,12 +13,12 @@ export default function Client() {
 
   return (
     <>
-      <div className="text-3xl text-center">{t('Welcome to Bavarois Fidelity')}</div>
-      <div className="m4">
+      <div className="text-2xl text-center">{t('Welcome to Bavarois Fidelity')}</div>
+      <div className="">
         <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
       </div>
       <UserDisplay user={user} />
-      <div className="mt-8 i-lucide-beer animate-bounce h-4rem w-4rem text-yellow-500" />
+      <div className="mt-4 i-lucide-beer animate-bounce h-4rem w-4rem text-yellow-500" />
       <div className="flex gap-4 mt-8 w-full">
         {user?.admin && (
           <Link

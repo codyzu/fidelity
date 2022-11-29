@@ -109,7 +109,7 @@ export default function Scanner() {
 
   return (
     <>
-      <div className="bg-white w-[80vw] h-[80vw] aspect-square border-yellow-500 border-20 box-border">
+      <div className="bg-white w-[80vw] h-[80vw] aspect-square border-yellow-500 border-14 box-border">
         {code ? (
           <div className="w-full h-full flex items-center justify-center">
             <div
