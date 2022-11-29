@@ -13,7 +13,7 @@ export default function Client() {
 
   return (
     <>
-      <div className="text-3xl">{t('Welcome to Bavarois Fidelity')}</div>
+      <div className="text-3xl text-center">{t('Welcome to Bavarois Fidelity')}</div>
       <div className="m4">
         <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
       </div>
