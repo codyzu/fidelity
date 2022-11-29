@@ -18,6 +18,7 @@ export default function Client() {
         <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
       </div>
       <UserDisplay user={user} />
+      <div className="mt-8 i-lucide-beer animate-bounce h-4rem w-4rem text-yellow-500" />
       <div className="flex gap-4 mt-8 w-full">
         {user?.admin && (
           <Link
