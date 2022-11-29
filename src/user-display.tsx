@@ -8,7 +8,7 @@ export default function UserDisplay({user}: {user?: User}) {
   }
 
   return (
-    <div className="flex flex-col items-center my-4">
+    <>
       <div className="flex mb-4">
         <div className="mr-2 text-2xl">{user.phoneNumber ?? user.email}</div>
         {user.admin && (
@@ -17,9 +17,10 @@ export default function UserDisplay({user}: {user?: User}) {
           </div>
         )}
       </div>
-      <div>
-        {t('points')}: {user.points}
+      <div className="text-2xl">
+        {t('Points')}:{' '}
+        <div className="inline font-mono font-semibold">{user.points}</div>
       </div>
-    </div>
+    </>
   );
 }
