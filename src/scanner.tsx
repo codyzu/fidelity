@@ -16,6 +16,13 @@ import {signOut} from 'firebase/auth';
 import db from './db';
 import type User from './user';
 import UserDisplay from './user-display';
+import {auth} from './firebase';
+
+enum Action {
+  numeric = 'numeric',
+  admin = 'admin',
+  view = 'view',
+}
 
 export default function Scanner() {
   const {t} = useTranslation();
@@ -26,7 +33,7 @@ export default function Scanner() {
   const [pending, setPending] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [pointsToAdd, setPointsToAdd] = useState<number>(1);
-  const [isAdminAction, setIsAdminAction] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<Action>(Action.numeric);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const incrementPointsAction = async (scannedUid: string) =>
@@ -41,13 +48,13 @@ export default function Scanner() {
   function setIncrementPointsAction(
     pointsIncrement: (previous: number) => number,
   ) {
-    setIsAdminAction(false);
+    setActionType(Action.numeric);
     setPointsToAdd(pointsIncrement);
     setAction(() => incrementPointsAction);
   }
 
   function setAdminAction(willBeAdmin: boolean) {
-    setIsAdminAction(true);
+    setActionType(Action.admin);
     setIsAdmin(willBeAdmin);
     setPointsToAdd(1);
     setAction(
@@ -144,12 +151,14 @@ export default function Scanner() {
       {code && <div>{code}</div>}
       <UserDisplay user={user} />
       {!code && (
-        <div className="m-8 grid grid-cols-4 gap-4 w-full">
-          <div className="flex items-center justify-center">
-            {isAdminAction ? (
+        <div className="grid grid-cols-4 gap-4 w-full">
+          <div className="flex items-center justify-center col-span-4 h-8">
+            {actionType === Action.admin ? (
               <div className="text-base bg-red-6 text-white font-semibold rounded-full p-2">{`${
                 isAdmin ? '+' : '-'
               }${t('admin')}`}</div>
+            ) : actionType === Action.view ? (
+              <div className="i-lucide-check inline-block text-3xl" />
             ) : (
               <div
                 className={clsx(
@@ -161,10 +170,10 @@ export default function Scanner() {
           </div>
           <button
             type="button"
-            className="btn-num py-4"
+            className="btn-num"
             onClick={() => {
               setIncrementPointsAction((p) =>
-                isAdminAction || p < 0 ? 1 : p + 1,
+                actionType !== Action.numeric || p < 0 ? 1 : p + 1,
               );
             }}
           >
@@ -172,10 +181,10 @@ export default function Scanner() {
           </button>
           <button
             type="button"
-            className="btn-num py-4"
+            className="btn-num"
             onClick={() => {
               setIncrementPointsAction((p) =>
-                isAdminAction || p < 0 ? 5 : p + 5,
+                actionType !== Action.numeric || p < 0 ? 5 : p + 5,
               );
             }}
           >
@@ -183,14 +192,24 @@ export default function Scanner() {
           </button>
           <button
             type="button"
-            className="btn-num py-4"
+            className="btn-num"
             onClick={() => {
               setIncrementPointsAction((p) =>
-                isAdminAction || p < 0 ? 10 : p + 10,
+                actionType !== Action.numeric || p < 0 ? 10 : p + 10,
               );
             }}
           >
             +10
+          </button>
+          <button
+            type="button"
+            className="btn-num p-0"
+            onClick={() => {
+              setActionType(Action.view);
+              setAction(() => async () => undefined);
+            }}
+          >
+            <div className="i-lucide-check inline-block text-3xl" />
           </button>
           <button
             type="button"
@@ -203,10 +222,10 @@ export default function Scanner() {
           </button>
           <button
             type="button"
-            className="btn-num py-4"
+            className="btn-num"
             onClick={() => {
               setIncrementPointsAction((p) =>
-                isAdminAction || p > 0 ? -10 : p - 10,
+                actionType !== Action.numeric || p > 0 ? -10 : p - 10,
               );
             }}
           >
