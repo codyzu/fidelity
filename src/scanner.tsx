@@ -110,9 +110,9 @@ export default function Scanner() {
     <>
       {/* 256 + 12 border = 268 */}
       <div className="w-full max-w-[268px]">
-        <div className="aspect-square w-full  border-yellow-500 border-12 box-border">
+        <div className="aspect-square w-full border-yellow-500 border-12 box-border">
           {code ? (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full aspect-square flex items-center justify-center">
               <div
                 className={clsx(
                   'rounded-1/2 w-[90%] h-[90%] flex items-center justify-center',
