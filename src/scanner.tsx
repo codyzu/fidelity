@@ -103,42 +103,43 @@ export default function Scanner() {
       return;
     }
 
-    // Console.log('QR Result', result);
     void debouncedScan(result?.getText());
   };
 
   return (
     <>
-      <div className="bg-white w-[80vw] h-[80vw] aspect-square border-yellow-500 border-14 box-border">
-        {code ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <div
-              className={clsx(
-                'rounded-1/2 w-[90%] h-[90%] flex items-center justify-center',
-                'bg-green-6',
-                error && 'bg-red-6',
-                pending && 'bg-yellow-6',
-              )}
-            >
+      {/* 256 + 12 border = 268 */}
+      <div className="w-full max-w-[268px]">
+        <div className="aspect-square w-full  border-yellow-500 border-12 box-border">
+          {code ? (
+            <div className="w-full h-full flex items-center justify-center">
               <div
                 className={clsx(
-                  'text-white w-[50%] h-[50%] i-lucide-check-circle',
-                  error && 'i-lucide-frown',
-                  pending && 'i-lucide-loader animate-spin',
+                  'rounded-1/2 w-[90%] h-[90%] flex items-center justify-center',
+                  'bg-green-6',
+                  error && 'bg-red-6',
+                  pending && 'bg-yellow-6',
                 )}
-              />
+              >
+                <div
+                  className={clsx(
+                    'text-white w-[50%] h-[50%] i-lucide-check-circle',
+                    error && 'i-lucide-frown',
+                    pending && 'i-lucide-loader animate-spin',
+                  )}
+                />
+              </div>
             </div>
-          </div>
-        ) : (
-          <QrReader
-            videoContainerStyle={{width: '100%', height: '100%', padding: 0}}
-            className="w-full h-full"
-            videoStyle={{/* zIndex: '1' */ objectFit: 'cover'}}
-            constraints={{facingMode: 'environment', aspectRatio: 1}}
-            scanDelay={500}
-            onResult={onScan}
-          />
-        )}
+          ) : (
+            <QrReader
+              // Aspect ratio constraint doesn't seem to be respected on Safari, object-fit: cover forces a square
+              videoStyle={{objectFit: 'cover'}}
+              constraints={{facingMode: 'environment', aspectRatio: 1}}
+              scanDelay={500}
+              onResult={onScan}
+            />
+          )}
+        </div>
       </div>
 
       {code && <div>{code}</div>}
