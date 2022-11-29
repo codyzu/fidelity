@@ -226,7 +226,7 @@ export default function Scanner() {
           </button>
         </div>
       )}
-      <div className="grid grid-cols-2 gap-4 mt-24">
+      <div className="grid grid-cols-2 gap-4 mt-24 w-full">
         {!code && (
           <>
             <button
