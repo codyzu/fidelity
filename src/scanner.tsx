@@ -1,11 +1,4 @@
-import {
-  deleteDoc,
-  doc,
-  getDoc,
-  increment,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import {doc, getDoc, increment, setDoc} from 'firebase/firestore';
 import {type OnResultFunction, QrReader} from 'react-qr-reader';
 import {useEffect, useState} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
@@ -233,7 +226,7 @@ export default function Scanner() {
           </button>
         </div>
       )}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-4 mt-24">
         {!code && (
           <>
             <button
