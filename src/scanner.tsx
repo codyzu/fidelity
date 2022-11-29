@@ -151,44 +151,66 @@ export default function Scanner() {
                 isAdmin ? '+' : '-'
               }${t('admin')}`}</div>
             ) : (
-              <div className="text-3xl">{`+${pointsToAdd}`}</div>
+              <div
+                className={clsx(
+                  'text-3xl font-mono',
+                  pointsToAdd < 0 && 'text-red-6',
+                )}
+              >{`${pointsToAdd > 0 ? '+' : ''}${pointsToAdd}`}</div>
             )}
           </div>
           <button
             type="button"
-            className="btn py-4"
+            className="btn-num py-4"
             onClick={() => {
-              setIncrementPointsAction((p) => (isAdminAction ? 1 : p + 1));
+              setIncrementPointsAction((p) =>
+                isAdminAction || p < 0 ? 1 : p + 1,
+              );
             }}
           >
             +1
           </button>
           <button
             type="button"
-            className="btn py-4"
+            className="btn-num py-4"
             onClick={() => {
-              setIncrementPointsAction((p) => (isAdminAction ? 5 : p + 5));
+              setIncrementPointsAction((p) =>
+                isAdminAction || p < 0 ? 5 : p + 5,
+              );
             }}
           >
             +5
           </button>
           <button
             type="button"
-            className="btn py-4"
+            className="btn-num py-4"
             onClick={() => {
-              setIncrementPointsAction((p) => (isAdminAction ? 10 : p + 10));
+              setIncrementPointsAction((p) =>
+                isAdminAction || p < 0 ? 10 : p + 10,
+              );
             }}
           >
             +10
           </button>
           <button
             type="button"
-            className="btn py-4 bg-red-800 col-span-4"
+            className="btn py-4 bg-red-800 col-span-3"
             onClick={() => {
               setIncrementPointsAction(() => 1);
             }}
           >
             {t('Clear')}
+          </button>
+          <button
+            type="button"
+            className="btn-num py-4"
+            onClick={() => {
+              setIncrementPointsAction((p) =>
+                isAdminAction || p > 0 ? -10 : p - 10,
+              );
+            }}
+          >
+            -10
           </button>
         </div>
       )}
