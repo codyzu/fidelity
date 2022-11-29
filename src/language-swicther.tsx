@@ -5,7 +5,7 @@ export default function LanguageSwitcher() {
   const {i18n} = useTranslation();
 
   return (
-    <div className="flex justify-center mt-8">
+    <div className="flex justify-center">
       <div className="flex">
         <button
           className={clsx(

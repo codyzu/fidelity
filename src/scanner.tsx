@@ -107,7 +107,7 @@ export default function Scanner() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <>
       <div className="bg-white w-[80vw] h-[80vw] aspect-square border-yellow-500 border-20 box-border">
         {code ? (
           <div className="w-full h-full flex items-center justify-center">
@@ -191,7 +191,7 @@ export default function Scanner() {
           </button>
         </div>
       )}
-      <div className="mt-8 grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-6">
         {!code && (
           <>
             <button
@@ -214,14 +214,21 @@ export default function Scanner() {
             </button>
           </>
         )}
+        <Link
+          className="btn-sm decoration-none flex items-center justify-center"
+          role="button"
+          to="/"
+        >
+          <div>{t('My profile')}</div>
+        </Link>
+        <button
+          className="btn-sm"
+          type="button"
+          onClick={async () => signOut(auth)}
+        >
+          {t('Sign out')}
+        </button>
       </div>
-      <Link
-        className="btn-sm decoration-none flex items-center justify-center mt-6"
-        role="button"
-        to="/"
-      >
-        <div>{t('My profile')}</div>
-      </Link>
-    </div>
+    </>
   );
 }
