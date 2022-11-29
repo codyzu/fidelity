@@ -6,6 +6,7 @@ import 'uno.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import './i18n'; // eslint-disable-line import/no-unassigned-import
 import LoadingSpinner from './loading-spinner';
+import ErrorPage from './error-page';
 
 const Client = lazy(async () => import('./client'));
 const Scanner = lazy(async () => import('./scanner'));
@@ -20,8 +21,9 @@ const router = createBrowserRouter([
       {index: true, element: <Client />},
       {path: '/scan', element: <Scanner />},
     ],
+    errorElement: <ErrorPage />,
   },
-  {path: '/finishLogin', element: <LoginFinish />},
+  {path: '/finishLogin', element: <LoginFinish />, errorElement: <ErrorPage />},
 ]);
 
 ReactDOM.createRoot(document.querySelector('#root')!).render(
