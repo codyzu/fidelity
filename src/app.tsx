@@ -3,14 +3,14 @@ import {Outlet, useNavigate} from 'react-router-dom';
 import {doc, onSnapshot} from 'firebase/firestore';
 import {auth} from './firebase';
 import Page from './page';
-import type User from './user';
+import {type User, type UserDoc} from './user';
 import db from './db';
 import LoadingSpinner from './loading-spinner';
 
 const Login = lazy(async () => import('./login'));
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [uid, setUid] = useState<string>();
   const [user, setUser] = useState<User>();
   const [authStateLoaded, setAuthStateLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -19,39 +19,37 @@ function App() {
     () =>
       auth.onAuthStateChanged((nextUser) => {
         setAuthStateLoaded(true);
-        setLoggedIn(Boolean(nextUser));
+        setUid(nextUser?.uid);
       }),
     [],
   );
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (!uid) {
       setUser(undefined);
       return;
     }
 
-    return onSnapshot(doc(db, 'users', auth.currentUser!.uid), (snapshot) => {
+    return onSnapshot(doc(db, 'users', uid), (snapshot) => {
       if (!snapshot.exists()) {
         console.log('no user data');
         return;
       }
 
-      console.log('exists', 'data', snapshot.data());
-      const nextUser = snapshot.data() as User;
-      console.log('u', user);
+      const nextUser: User = {...(snapshot.data() as UserDoc), uid};
       setUser(nextUser);
       if (!user && nextUser.admin) {
         console.log('just logged in');
         navigate('/scan');
       }
     });
-  }, [loggedIn]);
+  }, [uid]);
 
   if (!authStateLoaded) {
     return <LoadingSpinner />;
   }
 
-  return <Page>{loggedIn ? <Outlet context={user} /> : <Login />}</Page>;
+  return <Page>{user ? <Outlet context={user} /> : <Login />}</Page>;
 }
 
 export default App;

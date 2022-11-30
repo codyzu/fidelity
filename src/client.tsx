@@ -3,7 +3,7 @@ import {signOut} from 'firebase/auth';
 import {useTranslation} from 'react-i18next';
 import {Link, useOutletContext} from 'react-router-dom';
 import {auth} from './firebase';
-import type User from './user';
+import {type User} from './user';
 import UserDisplay from './user-display';
 
 export default function Client() {
@@ -13,9 +13,11 @@ export default function Client() {
 
   return (
     <>
-      <div className="text-2xl text-center">{t('Welcome to Bavarois Fidelity')}</div>
+      <div className="text-2xl text-center">
+        {t('Welcome to Bavarois Fidelity')}
+      </div>
       <div className="">
-        <QRCode level="H" value={auth.currentUser?.uid ?? 'not logged in'} />
+        <QRCode level="H" value={user.uid} />
       </div>
       <UserDisplay user={user} />
       <div className="mt-4 i-lucide-beer animate-bounce h-4rem w-4rem text-yellow-500" />

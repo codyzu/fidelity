@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import {signOut} from 'firebase/auth';
 import db from './db';
-import type User from './user';
+import {type User} from './user';
 import UserDisplay from './user-display';
 import {auth} from './firebase';
 
