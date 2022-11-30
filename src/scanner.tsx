@@ -28,6 +28,24 @@ export default function Scanner() {
   const [pointsToAdd, setPointsToAdd] = useState<number>(1);
   const [actionType, setActionType] = useState<Action>(Action.numeric);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [qrKey, setQrKey] = useState<number>(Date.now());
+
+  useEffect(() => {
+    function reloadOnDisplayChange() {
+      console.log('Visibility changed');
+      if (document.visibilityState === 'visible') {
+        console.log('APP resumed');
+        // Window.location.reload();
+        setQrKey(Date.now());
+      }
+    }
+
+    // Hacky stuff to make sure the camera works on iOS when PWA is loaded and unloaded
+    window.addEventListener('visibilitychange', reloadOnDisplayChange);
+    return () => {
+      window.removeEventListener('visibilitychange', reloadOnDisplayChange);
+    };
+  }, []);
 
   const incrementPointsAction = async (scannedUid: string) =>
     setDoc(
@@ -132,6 +150,7 @@ export default function Scanner() {
             </div>
           ) : (
             <QrReader
+              key={qrKey}
               // Aspect ratio constraint doesn't seem to be respected on Safari, object-fit: cover forces a square
               videoStyle={{objectFit: 'cover'}}
               constraints={{facingMode: 'environment', aspectRatio: 1}}
