@@ -1,9 +1,9 @@
 import {isSignInWithEmailLink, signInWithEmailLink} from 'firebase/auth';
-import {t} from 'i18next';
 import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
 import {auth} from './firebase';
+import LoadingSpinner from './loading-spinner';
 import Page from './page';
 
 export default function LoginFinish() {
@@ -51,9 +51,5 @@ export default function LoginFinish() {
     </Page>;
   }
 
-  return (
-    <Page>
-      <div className="i-lucide-loader animate-spin h-4rem w-4rem" />;
-    </Page>
-  );
+  return <LoadingSpinner />;
 }
