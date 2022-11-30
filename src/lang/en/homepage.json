@@ -1,4 +1,6 @@
 {
   "loginLinkError": "Something is not right, you shouldn&apos;t be here. Go to the",
-  "emailNotFound": "Looks like you changed browsers or devices. Please enter your email address again to complete the login."
+  "emailNotFound": "Looks like you changed browsers or devices. Please enter your email address again to complete the login.",
+  "email sent": "Check your email to complete your login",
+  "sms sent": "Login code sent by SMS, enter the code below"
 }

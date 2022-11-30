@@ -4,7 +4,7 @@ import {
   sendSignInLinkToEmail,
   signInWithPhoneNumber,
 } from 'firebase/auth';
-import {useEffect, useRef, useState} from 'react';
+import {type FormEvent, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import PI from 'react-phone-input-2';
 import {auth} from './firebase';
@@ -25,6 +25,7 @@ export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [smsCode, setSmsCode] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [emailSent, setEmailSent] = useState<boolean>(false);
 
   // Ref needed for the recapthaVerifier
   const smsLoginRef = useRef<HTMLButtonElement>(null);
@@ -32,7 +33,9 @@ export default function Login() {
   // Need to store a reference to the send sms result so we can verify the code
   const [sendResult, setSendResult] = useState<ConfirmationResult>();
 
-  async function loginSms() {
+  async function submitSendSms(event_: FormEvent) {
+    event_.preventDefault();
+
     // Ideas to improve this: https://stackoverflow.com/questions/62619916/firebase-invisible-recaptcha-does-not-work-in-react-js
     const recapthaVerifier = new RecaptchaVerifier(
       smsLoginRef.current!,
@@ -57,7 +60,9 @@ export default function Login() {
     setSendResult(result);
   }
 
-  async function loginEmail() {
+  async function submitEmailLogin(event_: FormEvent) {
+    event_.preventDefault();
+
     const actionCodeSettings = {
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be in the authorized domains list in the Firebase Console.
@@ -78,74 +83,87 @@ export default function Login() {
     console.log('AC', actionCodeSettings);
     await sendSignInLinkToEmail(auth, email, actionCodeSettings);
     window.localStorage.setItem('emailForSignIn', email);
+    setEmailSent(true);
+  }
+
+  function submitSmsCode(event_: FormEvent) {
+    event_.preventDefault();
+    void sendResult!.confirm(smsCode);
   }
 
   return (
-    <div className="shadow-lg rounded-lg p-2 flex flex-col w-full">
-      <div className="text-xl text-center m-2 mb-6">
+    <div className="shadow-lg rounded-lg p-4 flex flex-col w-full gap-4">
+      <div className="text-xl text-center mb-6">
         {t('Sign in to get started')}
       </div>
-      <label className="m-2">{t('Login by email')}:</label>
-      <input
-        className="input m-2"
-        type="email"
-        value={email}
-        onChange={(event_) => {
-          setEmail(event_.target.value);
-        }}
-      />
-      <button className="btn m-2 mb-6" type="button" onClick={loginEmail}>
-        {t('Login')}
-      </button>
-      <label className="m-2">{t('Login by SMS')}:</label>
-      <div className="m-2">
-        <PhoneInput
-          // InputClass="input-base! py-2! relative! w-full!"
-          // buttonClass="rounded-lg! py-0! flex-shrink-0! z-10! inline-flex"
-          // containerClass="mr-2 p-2 flex-1"
-          inputClass="w-auto!"
-          buttonClass=""
-          containerClass=""
-          dropdownClass=""
-          searchClass=""
-          country="fr"
-          value={phoneNumber}
-          onChange={(phone: string) => {
-            setPhoneNumber(phone);
+      <form className="flex flex-col w-full gap-4" onSubmit={submitEmailLogin}>
+        <label className="" htmlFor="email">
+          {t('Login by email')}:
+        </label>
+        <input
+          className="input"
+          id="email"
+          type="email"
+          value={email}
+          onChange={(event_) => {
+            setEmail(event_.target.value);
           }}
         />
-      </div>
-      <button
-        ref={smsLoginRef}
-        className="btn m-2 mb-6"
-        type="button"
-        onClick={() => {
-          void loginSms();
-        }}
-      >
-        {t('Login')}
-      </button>
+        {emailSent && (
+          <div className="text-sm font-semibold">{t('email sent')}</div>
+        )}
+        <button className="btn mb-6" type="submit">
+          {t('Login')}
+        </button>
+      </form>
+      <form className="flex flex-col w-full gap-4" onSubmit={submitSendSms}>
+        <label className="" htmlFor="phone">
+          {t('Login by SMS')}:
+        </label>
+        <div className="">
+          <PhoneInput
+            id="phone"
+            // InputClass="input-base! py-2! relative! w-full!"
+            // buttonClass="rounded-lg! py-0! flex-shrink-0! z-10! inline-flex"
+            // containerClass="mr-2 p-2 flex-1"
+            inputClass="w-auto!"
+            buttonClass=""
+            containerClass=""
+            dropdownClass=""
+            searchClass=""
+            country="fr"
+            value={phoneNumber}
+            onChange={(phone: string) => {
+              setPhoneNumber(phone);
+            }}
+          />
+        </div>
+        {sendResult && (
+          <div className="text-sm font-semibold">{t('sms sent')}</div>
+        )}
+        <button ref={smsLoginRef} className="btn mb-6" type="submit">
+          {t('Send SMS')}
+        </button>
+      </form>
       {sendResult && (
-        <>
-          <label className="m-2">{t('Code')}:</label>
+        <form className="flex flex-col w-full gap-4" onSubmit={submitSmsCode}>
+          <label className="" htmlFor="smscode">
+            {t('SMS Code')}:
+          </label>
           <input
-            className="input m-2"
-            type="text"
+            autoFocus
+            className="input"
+            id="smscode"
+            type="tel"
             value={smsCode}
             onChange={(event_) => {
               setSmsCode(event_.target.value);
             }}
           />
-          <button
-            className="btn m-2"
-            type="button"
-            onClick={() => {
-              void sendResult.confirm(smsCode);
-            }}
-          >
-            Login
+          <button className="btn" type="submit">
+            {t('Login')}
           </button>
-        </>
+        </form>
       )}
     </div>
   );

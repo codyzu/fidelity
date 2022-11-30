@@ -10,5 +10,9 @@
   "loginLinkError": "Quelque chose n&apos;est pas bien. Navigez à la",
   "emailNotFound": "Nous avons detecté que vous avez changé votre browser web ou device",
   "homepage": "page d&apos;accuiel",
-  "The beers are on their way...": "Les bieres arriverais..."
+  "The beers are on their way...": "Les bieres arriverais...",
+  "email sent": "Regardez votre boite mail pour completer la connection",
+  "sms sent": "Votre code de connection etait envoyé par SMS, entrez le en dessous",
+  "SMS Code": "Code SMS",
+  "Send SMS": "Envoyer SMS"
 }
