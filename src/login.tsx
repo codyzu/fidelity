@@ -104,6 +104,7 @@ export default function Login() {
           className="input"
           id="email"
           type="email"
+          placeholder="email@address.com"
           value={email}
           onChange={(event_) => {
             setEmail(event_.target.value);
@@ -122,7 +123,6 @@ export default function Login() {
         </label>
         <div className="">
           <PhoneInput
-            id="phone"
             // InputClass="input-base! py-2! relative! w-full!"
             // buttonClass="rounded-lg! py-0! flex-shrink-0! z-10! inline-flex"
             // containerClass="mr-2 p-2 flex-1"
@@ -132,6 +132,7 @@ export default function Login() {
             dropdownClass=""
             searchClass=""
             country="fr"
+            inputProps={{id: 'phone'}}
             value={phoneNumber}
             onChange={(phone: string) => {
               setPhoneNumber(phone);
@@ -153,8 +154,10 @@ export default function Login() {
           <input
             autoFocus
             className="input"
+            pattern="\d{6}"
             id="smscode"
             type="tel"
+            placeholder="123456"
             value={smsCode}
             onChange={(event_) => {
               setSmsCode(event_.target.value);
