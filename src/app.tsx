@@ -12,13 +12,12 @@ const Login = lazy(async () => import('./login'));
 function App() {
   const [uid, setUid] = useState<string>();
   const [user, setUser] = useState<User>();
-  const [authStateLoaded, setAuthStateLoaded] = useState<boolean>(false);
+  const [userLoaded, setUserLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(
     () =>
       auth.onAuthStateChanged((nextUser) => {
-        setAuthStateLoaded(true);
         setUid(nextUser?.uid);
       }),
     [],
@@ -38,6 +37,7 @@ function App() {
 
       const nextUser: User = {...(snapshot.data() as UserDoc), uid};
       setUser(nextUser);
+      setUserLoaded(true);
       if (!user && nextUser.admin) {
         console.log('just logged in');
         navigate('/scan');
@@ -45,7 +45,7 @@ function App() {
     });
   }, [uid]);
 
-  if (!authStateLoaded) {
+  if (!userLoaded) {
     return <LoadingSpinner />;
   }
 
