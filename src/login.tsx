@@ -96,27 +96,40 @@ export default function Login() {
       <div className="text-xl text-center mb-6">
         {t('Sign in to get started')}
       </div>
-      <form className="flex flex-col w-full gap-4" onSubmit={submitEmailLogin}>
-        <label className="" htmlFor="email">
-          {t('Login by email')}:
-        </label>
-        <input
-          className="input"
-          id="email"
-          type="email"
-          placeholder="email@address.com"
-          value={email}
-          onChange={(event_) => {
-            setEmail(event_.target.value);
-          }}
-        />
-        {emailSent && (
-          <div className="text-sm font-semibold">{t('email sent')}</div>
-        )}
-        <button className="btn mb-6" type="submit">
-          {t('Login')}
-        </button>
-      </form>
+      {/* 
+        Currently no way to open email links in a PWA on iOS.
+        https://stackoverflow.com/a/74567316
+        https://developer.mozilla.org/en-US/docs/Web/Manifest/protocol_handlers#browser_compatibility
+
+        To be tested on Android. It might "just work".
+       */}
+      {/* @ts-expect-error standalone is a special property for iOS https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html */}
+      {!window.navigator.standalone && (
+        <form
+          className="flex flex-col w-full gap-4"
+          onSubmit={submitEmailLogin}
+        >
+          <label className="" htmlFor="email">
+            {t('Login by email')}:
+          </label>
+          <input
+            className="input"
+            id="email"
+            type="email"
+            placeholder="email@address.com"
+            value={email}
+            onChange={(event_) => {
+              setEmail(event_.target.value);
+            }}
+          />
+          {emailSent && (
+            <div className="text-sm font-semibold">{t('email sent')}</div>
+          )}
+          <button className="btn mb-6" type="submit">
+            {t('Login')}
+          </button>
+        </form>
+      )}
       <form className="flex flex-col w-full gap-4" onSubmit={submitSendSms}>
         <label className="" htmlFor="phone">
           {t('Login by SMS')}:
