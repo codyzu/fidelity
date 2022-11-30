@@ -13,23 +13,33 @@ function App() {
   const [uid, setUid] = useState<string>();
   const [user, setUser] = useState<User>();
   const [userLoaded, setUserLoaded] = useState<boolean>(false);
+  const [authStateLoaded, setAuthStateLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(
     () =>
       auth.onAuthStateChanged((nextUser) => {
         setUid(nextUser?.uid);
+        setAuthStateLoaded(true);
       }),
     [],
   );
 
   useEffect(() => {
+    // Auth stated loaded and not logged in
+    if (authStateLoaded && !uid) {
+      setUserLoaded(true);
+    }
+
     if (!uid) {
       setUser(undefined);
       return;
     }
 
     return onSnapshot(doc(db, 'users', uid), (snapshot) => {
+      setUserLoaded(true);
+
+      // Should never happen
       if (!snapshot.exists()) {
         console.log('no user data');
         return;
@@ -37,13 +47,12 @@ function App() {
 
       const nextUser: User = {...(snapshot.data() as UserDoc), uid};
       setUser(nextUser);
-      setUserLoaded(true);
       if (!user && nextUser.admin) {
         console.log('just logged in');
         navigate('/scan');
       }
     });
-  }, [uid]);
+  }, [uid, authStateLoaded]);
 
   if (!userLoaded) {
     return <LoadingSpinner />;
