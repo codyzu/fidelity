@@ -13,7 +13,8 @@ import {auth} from './firebase';
 
 enum Action {
   numeric = 'numeric',
-  admin = 'admin',
+  adminAdd = '+admin',
+  adminRemove = '-admin',
   view = 'view',
 }
 
@@ -27,55 +28,48 @@ export default function Scanner() {
   const [error, setError] = useState<boolean>(false);
   const [pointsToAdd, setPointsToAdd] = useState<number>(1);
   const [actionType, setActionType] = useState<Action>(Action.numeric);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [qrKey, setQrKey] = useState<number>(Date.now());
+
+  function remountQrScanner() {
+    // Window.location.reload();
+    setQrKey(Date.now());
+  }
 
   useEffect(() => {
     function reloadOnDisplayChange() {
       console.log('Visibility changed');
       if (document.visibilityState === 'visible') {
         console.log('APP resumed');
-        // Window.location.reload();
-        setQrKey(Date.now());
+        remountQrScanner();
       }
     }
 
     // Hacky stuff to make sure the camera works on iOS when PWA is loaded and unloaded
+    // Also helps in dev builds and when the tab has been open for a long time
     window.addEventListener('visibilitychange', reloadOnDisplayChange);
     return () => {
       window.removeEventListener('visibilitychange', reloadOnDisplayChange);
     };
   }, []);
 
-  const incrementPointsAction = async (scannedUid: string) =>
-    setDoc(
-      doc(db, 'users', scannedUid),
-      {points: increment(pointsToAdd)},
-      {merge: true},
-    );
+  function userAction(scannedUid: string) {
+    if (actionType === Action.numeric) {
+      return setDoc(
+        doc(db, 'users', scannedUid),
+        {points: increment(pointsToAdd)},
+        {merge: true},
+      );
+    }
 
-  const [action, setAction] = useState(() => incrementPointsAction);
+    if (actionType === Action.adminAdd || actionType === Action.adminRemove) {
+      return setDoc(
+        doc(db, 'users', scannedUid),
+        {admin: actionType === Action.adminAdd},
+        {merge: true},
+      );
+    }
 
-  function setIncrementPointsAction(
-    pointsIncrement: (previous: number) => number,
-  ) {
-    setActionType(Action.numeric);
-    setPointsToAdd(pointsIncrement);
-    setAction(() => incrementPointsAction);
-  }
-
-  function setAdminAction(willBeAdmin: boolean) {
-    setActionType(Action.admin);
-    setIsAdmin(willBeAdmin);
-    setPointsToAdd(1);
-    setAction(
-      () => async (scannedUid: string) =>
-        setDoc(
-          doc(db, 'users', scannedUid),
-          {admin: willBeAdmin},
-          {merge: true},
-        ),
-    );
+    // Return undefined for ActionType.view (no action)
   }
 
   const debouncedScan = useDebouncedCallback(
@@ -84,7 +78,7 @@ export default function Scanner() {
       setPending(true);
       setCode(scannedUid);
       try {
-        await action(scannedUid);
+        await userAction(scannedUid);
         const snapshot = await getDoc(doc(db, 'users', scannedUid));
         setUser(snapshot.data() as User);
       } catch (userError: unknown) {
@@ -98,7 +92,8 @@ export default function Scanner() {
           setHandle(undefined);
           setUser(undefined);
           setError(false);
-          setIncrementPointsAction(() => 1);
+          setActionType(Action.numeric);
+          setPointsToAdd(1);
         }, 5000);
         setHandle(nextHandle);
       }
@@ -166,9 +161,10 @@ export default function Scanner() {
       {!code && (
         <div className="grid grid-cols-4 gap-4 w-full">
           <div className="flex items-center justify-center col-span-4 h-8">
-            {actionType === Action.admin ? (
+            {actionType === Action.adminAdd ||
+            actionType === Action.adminRemove ? (
               <div className="text-base bg-red-6 text-white font-semibold rounded-full p-2">{`${
-                isAdmin ? '+' : '-'
+                actionType === Action.adminAdd ? '+' : '-'
               }${t('admin')}`}</div>
             ) : actionType === Action.view ? (
               <div className="i-lucide-check inline-block text-3xl" />
@@ -185,9 +181,10 @@ export default function Scanner() {
             type="button"
             className="btn-num"
             onClick={() => {
-              setIncrementPointsAction((p) =>
+              setPointsToAdd((p) =>
                 actionType !== Action.numeric || p < 0 ? 1 : p + 1,
               );
+              setActionType(Action.numeric);
             }}
           >
             +1
@@ -196,9 +193,10 @@ export default function Scanner() {
             type="button"
             className="btn-num"
             onClick={() => {
-              setIncrementPointsAction((p) =>
-                actionType !== Action.numeric || p < 0 ? 5 : p + 5,
+              setPointsToAdd((p) =>
+                actionType !== Action.numeric || p <= 1 ? 5 : p + 5,
               );
+              setActionType(Action.numeric);
             }}
           >
             +5
@@ -207,9 +205,10 @@ export default function Scanner() {
             type="button"
             className="btn-num"
             onClick={() => {
-              setIncrementPointsAction((p) =>
-                actionType !== Action.numeric || p < 0 ? 10 : p + 10,
+              setPointsToAdd((p) =>
+                actionType !== Action.numeric || p <= 1 ? 10 : p + 10,
               );
+              setActionType(Action.numeric);
             }}
           >
             +10
@@ -219,7 +218,6 @@ export default function Scanner() {
             className="btn-num p-0"
             onClick={() => {
               setActionType(Action.view);
-              setAction(() => async () => undefined);
             }}
           >
             <div className="i-lucide-check inline-block text-3xl" />
@@ -228,7 +226,8 @@ export default function Scanner() {
             type="button"
             className="btn py-4 bg-red-800 col-span-3"
             onClick={() => {
-              setIncrementPointsAction(() => 1);
+              setPointsToAdd(1);
+              setActionType(Action.numeric);
             }}
           >
             {t('Clear')}
@@ -237,9 +236,10 @@ export default function Scanner() {
             type="button"
             className="btn-num"
             onClick={() => {
-              setIncrementPointsAction((p) =>
+              setPointsToAdd((p) =>
                 actionType !== Action.numeric || p > 0 ? -10 : p - 10,
               );
+              setActionType(Action.numeric);
             }}
           >
             -10
@@ -253,7 +253,7 @@ export default function Scanner() {
               className="btn-sm"
               type="button"
               onClick={() => {
-                setAdminAction(true);
+                setActionType(Action.adminAdd);
               }}
             >
               +{t('admin')}
@@ -262,7 +262,7 @@ export default function Scanner() {
               className="btn-sm"
               type="button"
               onClick={() => {
-                setAdminAction(false);
+                setActionType(Action.adminRemove);
               }}
             >
               -{t('admin')}
