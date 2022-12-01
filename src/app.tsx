@@ -14,7 +14,7 @@ function App() {
   const [user, setUser] = useState<User>();
   const [authStateLoaded, setAuthStateLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
-  const firstUserLoad = useRef(false);
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(
     () =>
@@ -29,7 +29,7 @@ function App() {
     // Auth stated loaded and user not logged in
     // Mark the first user load as complete to remove the loading spinner
     if (authStateLoaded && !uid) {
-      firstUserLoad.current = true;
+      setLoaded(true);
     }
 
     if (!uid) {
@@ -51,17 +51,17 @@ function App() {
 
     // If this is the first time a user has been loaded,
     // navigate if its an admin user
-    if (!firstUserLoad.current && user.admin) {
-      firstUserLoad.current = true;
+    // if (!firstUserLoad.current && user.admin) {
+    if (!loaded && user.admin) {
       console.log('just logged in');
       navigate('/scan');
     }
 
     // Mark that the user is loaded to remove the loading spinner
-    firstUserLoad.current = true;
-  }, [user, navigate]);
+    setLoaded(true);
+  }, [user, navigate, loaded]);
 
-  if (!firstUserLoad.current) {
+  if (!loaded) {
     return <LoadingSpinner />;
   }
 
