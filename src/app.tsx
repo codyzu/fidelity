@@ -39,6 +39,13 @@ function App() {
 
     console.log('register onsnap');
     return onSnapshot(doc(db, 'users', uid), (snapshot) => {
+      // Not sure if this is possible
+      // Time between creating an account and the cloud function creating the user doc
+      if (!snapshot.exists()) {
+        console.log('no user doc');
+        return;
+      }
+
       const nextUser: User = {...(snapshot.data() as UserDoc), uid};
       setUser(nextUser);
     });
