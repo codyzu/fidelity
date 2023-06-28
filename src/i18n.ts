@@ -4,6 +4,7 @@ import {initReactI18next} from 'react-i18next';
 import homepageFr from './lang/fr/homepage.json';
 import homepageEn from './lang/en/homepage.json';
 
+// eslint-disable-next-line import/no-named-as-default-member
 void i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -19,7 +20,7 @@ void i18n
     fallbackLng: 'en',
     debug: true,
     ns: ['translations'],
-    defaultNS: 'translations',
+    defaultNS: 'translations', // eslint-disable-line @typescript-eslint/naming-convention
     keySeparator: false,
     interpolation: {
       escapeValue: false,

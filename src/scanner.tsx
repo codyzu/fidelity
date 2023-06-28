@@ -21,7 +21,7 @@ enum Action {
 export default function Scanner() {
   const {t} = useTranslation();
 
-  const [code, setCode] = useState();
+  const [code, setCode] = useState<string>();
   const [handle, setHandle] = useState<number>();
   const [user, setUser] = useState<User>();
   const [pending, setPending] = useState<boolean>(false);
@@ -52,7 +52,7 @@ export default function Scanner() {
     };
   }, []);
 
-  function userAction(scannedUid: string) {
+  async function userAction(scannedUid: string) {
     if (actionType === Action.numeric) {
       return setDoc(
         doc(db, 'users', scannedUid),
@@ -73,7 +73,7 @@ export default function Scanner() {
   }
 
   const debouncedScan = useDebouncedCallback(
-    async (scannedUid) => {
+    async (scannedUid: string) => {
       console.log('code', scannedUid);
       setPending(true);
       setCode(scannedUid);
@@ -116,7 +116,7 @@ export default function Scanner() {
       return;
     }
 
-    void debouncedScan(result?.getText());
+    void debouncedScan(result!.getText());
   };
 
   return (

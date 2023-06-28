@@ -2,7 +2,7 @@ import React, {lazy, Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
 import 'react-phone-input-2/lib/style.css';
 import '@unocss/reset/normalize.css';
-import 'uno.css';
+import 'virtual:uno.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import './i18n'; // eslint-disable-line import/no-unassigned-import
 import LoadingSpinner from './loading-spinner';

@@ -10,7 +10,7 @@ export default function ErrorPage() {
       <div className="text-3xl">Oops!</div>
       <div>Sorry, something bad happened.</div>
       <div>
-        {/* @ts-expect-error */}
+        {/* @ts-expect-error we make some assumptions about what is thrown */}
         <i>{error.statusText || error.message}</i>
       </div>
     </div>

@@ -18,7 +18,7 @@ const PhoneInput = PI.default ?? PI; // eslint-disable-line @typescript-eslint/n
 export default function Login() {
   const {t, i18n} = useTranslation();
   useEffect(() => {
-    auth.languageCode = i18n.resolvedLanguage;
+    auth.languageCode = i18n.resolvedLanguage ?? null;
   }, [i18n.resolvedLanguage]);
 
   // Stateful form controls
